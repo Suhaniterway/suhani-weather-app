@@ -203,3 +203,18 @@ body.light-mode .card {
         margin-top: 20px;  
     }  
 }  
+body.clear {
+    background: linear-gradient(to right, #fceabb, #f8b500);
+}
+body.clouds {
+    background: linear-gradient(to right, #bdc3c7, #2c3e50);
+}
+body.rain, body.drizzle, body.thunderstorm {
+    background: linear-gradient(to right, #667db6, #0082c8);
+}
+body.snow {
+    background: linear-gradient(to right, #e6dada, #274046);
+}
+body.mist {
+    background: linear-gradient(to right, #606c88, #3f4c6b);
+}
