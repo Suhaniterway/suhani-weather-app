@@ -1,0 +1,205 @@
+*{  
+    margin: 0;  
+    padding: 0;  
+    font-family: 'Poppins', sans-serif;  
+    box-sizing: border-box;  
+}  
+body{  
+    background: #222;  
+}  
+.card {  
+    width: 90%;  
+    max-width: 470px;  
+    background: rgba(0, 0, 0, 0.5); /* Default background color (transparent black) */  
+    color: rgb(255, 255, 255);  
+    margin: 100px auto 0;  
+    border-radius: 20px;  
+    padding: 2rem;  
+    text-align: center;  
+    box-shadow: 0 0 30px rgba(0, 254, 186, 0.3);  
+    transition: background 0.3s ease; /* Smooth transition effect for background changes */  
+}    
+.search{  
+    width: 100%;  
+    display: flex;  
+    align-items: center;  
+    justify-content: space-between;  
+}  
+.search input{  
+    border: 2px solid transparent;  
+    outline: 0;  
+    background: rgba(255, 255, 255, 0.9);  
+    color: #555;  
+    padding: 10px 25px;  
+    height: 60px;  
+    border-radius: 30px;  
+    flex: 1;  
+    margin-right: 16px;  
+    font-size: 18px;  
+    transition: all 0.3s;  
+}  
+.search input:focus {  
+    border-color: #00feba; /* Highlight when typing */  
+    background: white;  
+}  
+.search button{  
+    border: 0;  
+    outline: 0;  
+    background: rgba(255, 255, 255, 0.9);  
+    border-radius: 50%;  
+    width: 60px;  
+    height: 60px;  
+    cursor: pointer;  
+    transition: all 0.3s;  
+}  
+.search button:hover {  
+    background: #083f30;  
+    transform: rotate(90deg); /* Playful rotation */  
+}  
+.search button:hover img {  
+    filter: brightness(0) invert(1); /* Icon turns white */  
+}  
+.search button img{  
+    width: 16px;  
+}  
+.weather-icon{  
+    width: 170px;  
+    margin-top: 30px;  
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));  
+    animation: float 5s ease-in-out infinite ; /* Floating effect */  
+}  
+@keyframes float {  
+    0%, 100% { transform: translateY(0); }  
+    50% { transform: translateY(-10px); }  
+}  
+.weather h1{  
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);  
+    font-size: 4rem;  
+    font-weight: 500;  
+    position: relative;  
+    display: inline-block;  
+}  
+.weather h1::after {  
+    content: "°C";  
+    font-size: 0.5em;  
+    vertical-align: super;  
+}  
+.weather h2{  
+    font-size: 40;  
+    font-weight: 400;  
+    margin-top: 5px;  
+    position: relative;  
+    display: inline-block;  
+}  
+.details{  
+    display: flex;  
+    align-items: center;  
+    justify-content: space-between;  
+    padding: 0 20px;  
+    margin-top: 50px;  
+}  
+.col{  
+    display: flex;  
+    align-items: center;  
+    text-align: left;background: rgba(255, 255, 255, 0.1);  
+    padding: 15px;  
+    border-radius: 15px;  
+    backdrop-filter: blur(5px); /* Frosted glass effect */  
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);  
+    transition: all 0.3s;  
+}  
+.col:hover {  
+    background: rgba(255, 255, 255, 0.2);  
+}  
+.col img{  
+    width: 40px;  
+    margin-right: 10px;  
+
+}  
+.humidity, .wind{  
+    font-size: 28px;  
+    margin-top: -6px;  
+}  
+.weather{  
+    display: none;  
+}  
+.error{  
+    text-align: left;  
+    margin-left: 10px;  
+    font-size: 14px;  
+    margin-top: 10px;  
+    display: none;  
+    background: rgba(255, 107, 107, 0.2);  
+    padding: 10px 15px;  
+    border-radius: 10px;  
+    border-left: 3px solid #ff6b6b;  
+    animation: shake 0.5s; /* Attention-grabbing */  
+}  
+@keyframes shake {  
+    0%, 100% { transform: translateX(0); }  
+    20%, 60% { transform: translateX(-5px); }  
+    40%, 80% { transform: translateX(5px); }  
+}  
+@media (max-width: 480px) {  
+    .card { padding: 25px; }  
+    .weather h1 { font-size: 60px; }  
+    .col { flex-direction: column; text-align: center; }  
+    .col img { margin-right: 0; margin-bottom: 5px; }  
+}  
+.particles {  
+    position: fixed;  
+    top: 0;  
+    left: 0;  
+    width: 100%;  
+    height: 100%;  
+    z-index: -1;  
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="25" cy="25" r="1"/><circle cx="75" cy="50" r="1"/><circle cx="15" cy="70" r="1"/></svg>');  
+    animation: particles 20s linear infinite;  
+    opacity: 30;  
+}  
+@keyframes particles {  
+    0% { background-position: 0 0; }  
+    100% { background-position: 100px 100px; }  
+}  
+.theme-toggle {  
+    position: absolute;  
+    top: 20px;  
+    right: 20px;  
+    background: transparent;  
+    border: none;  
+    font-size: 24px;  
+    cursor: pointer;  
+}  
+body.dark-mode {  
+    background: #111;  
+}  
+body.light-mode .card {  
+    background: linear-gradient(135deg, #64b5f6, #1976d2);  
+}  
+.condition {  
+    font-size: 24px;  
+    font-weight: 20;  
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;  
+    margin-top: -1px;  
+    color: rgba(255, 255, 255, 0.9);  
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);  
+    transition: all 3s;  
+}  
+/* iPhone SE/12/13 Mini */  
+@media (max-width: 480px) and (max-height: 700px) {  
+    .card {  
+        margin: 30px auto 0;  
+        padding: 1rem;  
+    }  
+}  
+/* Mobile landscape */  
+@media (max-width: 850px) and (orientation: landscape) {  
+    .card {  
+        margin: 20px auto;  
+        max-width: 90%;  
+    }  
+    
+    .details {  
+        margin-top: 20px;  
+    }  
+}  

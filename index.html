@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>suhani's weather app</title>
+        <link rel="stylesheet" href="style.css"> 
+    </head>
+    <body>
+        <div class="card">
+            <div class="search">
+                <input type="text" placeholder="enter city name" spellcheck="false">
+                <button><img src="images/search.png"></button>
+            </div>
+            <div class="error">
+                <p>Invalid city name</p>
+            </div>
+            <div class="particles"></div>
+
+            <div class="weather">
+                <img src="images/rain.png" class="weather-icon">
+                <h1 class="temp">22°c</h1>
+                <h2 class="city">New York</h2>
+                <h3 class="condition">Rainy</h3> 
+                <div class="details">
+                    <div class="col">
+                        <img src="images/humidity.png">
+                        <div>
+                            <p class="humidity">50%</p>
+                            <p>Humidity</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <img src="images/wind.png">
+                        <div>
+                            <p class="wind">15 km/h</p>
+                            <p>Wind Speed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        const apiKey = "09d65011f5579a94ac6ac02173cc8072";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+        const card = document.querySelector(".card");
+
+        const weatherColors = {  
+            sunny: 'linear-gradient(135deg, #f6d365, #fda085)', // Warm yellow/orange
+            hot: 'linear-gradient(135deg, #ff9a9e, #fad0c4)', // Hot pink/peach
+            cold: 'linear-gradient(135deg, #a1c4fd, #c2e9fb)', // Light blue
+            snowy: 'linear-gradient(135deg, #e0f7fa, #b2ebf2)', // Ice blue
+            cloudy: 'linear-gradient(135deg, #bdc3c7, #2c3e50)', // Gray/blue-gray - Enhanced cloudy gradient
+            overcast: 'linear-gradient(135deg, #636363, #a2ab58)', // Dark gray for heavy clouds
+            rainy: 'linear-gradient(135deg, #cfd9df, #e2ebf0)', // Steel gray
+            thunder: 'linear-gradient(135deg, #485563, #29323c)', // Dark stormy
+            night: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)' // Night sky
+        };
+
+        const weatherConditions = {  
+            "Clouds": { 
+                text: (clouds) => clouds > 80 ? "Overcast" : "Cloudy", 
+                icon: (clouds) => clouds > 80 ? "overcast.png" : "clouds.png", 
+                bg: (clouds, temp) => clouds > 80 ? weatherColors.overcast : 
+                                      temp < 15 ? weatherColors.cold : weatherColors.cloudy
+            },  
+            "Clear": { 
+                text: "Sunny", 
+                icon: "clear.png", 
+                bg: (temp) => temp > 30 ? weatherColors.hot : weatherColors.sunny 
+            },  
+            "Rain": { text: "Rainy", icon: "rain.png", bg: weatherColors.rainy },  
+            "Drizzle": { text: "Drizzling", icon: "drizzle.png", bg: weatherColors.rainy },  
+            "Mist": { text: "Misty", icon: "mist.png", bg: weatherColors.cloudy },  
+            "Fog": { text: "Foggy", icon: "fog.png", bg: weatherColors.cloudy },
+            "Haze": { text: "Hazy", icon: "haze.png", bg: weatherColors.cloudy },
+            "Snow": { text: "Snowy", icon: "snow.png", bg: weatherColors.snowy },
+            "Thunderstorm": { text: "Stormy", icon: "thunderstorm.png", bg: weatherColors.thunder },
+            "Smoke": { text: "Smoky", icon: "smoke.png", bg: weatherColors.overcast },
+            "Dust": { text: "Dusty", icon: "dust.png", bg: weatherColors.overcast },
+            "Sand": { text: "Sandy", icon: "sand.png", bg: weatherColors.overcast },
+            "Ash": { text: "Ashy", icon: "ash.png", bg: weatherColors.overcast },
+            "Squall": { text: "Windy", icon: "windy.png", bg: weatherColors.cloudy },
+            "Tornado": { text: "Tornado", icon: "tornado.png", bg: weatherColors.thunder },
+            "Overcast": { text: "Overcast", icon: "overcast.png", bg: weatherColors.overcast}
+        };  
+
+        async function checkWeather(city) {
+            if (!city.trim()) {
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".error p").textContent = "Please enter a city name";
+                document.querySelector(".weather").style.display = "none";
+                card.style.background = "none";
+                return;
+            }
+
+            try {
+                const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+                
+                if (response.status === 404) {
+                    document.querySelector(".error").style.display = "block";
+                    document.querySelector(".error p").textContent = "City not found";
+                    document.querySelector(".weather").style.display = "none";
+                    card.style.background = "none";
+                } else {
+                    const data = await response.json();
+                    
+                    // Update weather data
+                    document.querySelector(".city").textContent = data.name;
+                    const temperature = Math.round(data.main.temp);
+                    document.querySelector(".temp").textContent = `${temperature}°C`;
+                    document.querySelector(".humidity").textContent = data.main.humidity + "%";
+                    document.querySelector(".wind").textContent = data.wind.speed + " km/h";
+                    const cloudiness = data.clouds?.all || 0;
+                    
+                    // Set weather icon and condition
+                    const weatherMain = data.weather[0].main;
+                    if (weatherConditions[weatherMain]) {
+                        const condition = weatherConditions[weatherMain];
+                        
+                        // Handle dynamic text, icon and background for cloudy conditions
+                        const conditionText = typeof condition.text === 'function' 
+                            ? condition.text(cloudiness) 
+                            : condition.text;
+                        const conditionIcon = typeof condition.icon === 'function'
+                            ? condition.icon(cloudiness)
+                            : condition.icon;
+                        
+                        weatherIcon.src = `images/${conditionIcon}`;
+                        document.querySelector(".condition").textContent = conditionText;
+                        
+                        // Set background (handles both functions and static values)
+                        if (typeof condition.bg === 'function') {
+                            card.style.background = condition.bg(cloudiness, temperature);
+                        } else {
+                            card.style.background = condition.bg;
+                        }
+                    } else {
+                        // Fallback for unknown conditions
+                        weatherIcon.src = "images/cloudy.png";
+                        document.querySelector(".condition").textContent = weatherMain;
+                        // Set background based on temperature for unknown conditions
+                        card.style.background = temperature > 25 ? weatherColors.hot : 
+                                                 temperature < 10 ? weatherColors.cold : 
+                                                 weatherColors.cloudy;
+                    }
+                    
+                    // Show weather and hide error
+                    document.querySelector(".weather").style.display = "block";
+                    document.querySelector(".error").style.display = "none";
+                }
+            } catch (error) {
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".error p").textContent = "Failed to fetch weather data";
+                document.querySelector(".weather").style.display = "none";
+                card.style.background = "none";
+                console.error("Error:", error);
+            }
+        }
+
+        // Search on button click
+        searchBtn.addEventListener("click", () => {
+            checkWeather(searchBox.value);
+        });
+
+        // Search on Enter key press
+        searchBox.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                checkWeather(searchBox.value);
+            }
+        });
+
+        // Optional: Get weather for current location
+        navigator.geolocation.getCurrentPosition(position => {  
+            const { latitude, longitude } = position.coords;  
+            fetch(`${apiUrl}lat=${latitude}&lon=${longitude}&appid=${apiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchBox.value = data.name;
+                    checkWeather(data.name);
+                })
+                .catch(error => {
+                    console.error("Geolocation weather fetch failed:", error);
+                });  
+        }, error => {
+            console.error("Geolocation error:", error);
+            // Default to a city if geolocation fails
+            checkWeather("Delhi");
+        });
+        </script>
+    </body>
+</html>
